@@ -105,7 +105,7 @@ function App() {
       {/* Main List */}
       <main class="flex-1 space-y-4 mb-6">
         <div class="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-1">
-          <div class="flex gap-4 w-full mr-10">
+          <div class="flex gap-4 w-full mr-11">
             <span class="flex-1">Header Key</span>
             <span class="flex-1 ml-2">Value</span>
           </div>
@@ -145,23 +145,29 @@ function App() {
           </For>
         </div>
 
-        <button 
-          onClick={addHeader} 
-          class="flex items-center justify-center gap-2 rounded-xl text-xs font-semibold border-2 border-dashed border-muted-foreground/20 text-muted-foreground hover:border-primary/50 hover:text-primary hover:bg-primary/5 h-10 w-full transition-all active:scale-[0.98]"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          Add Custom Header
-        </button>
+        <div class="flex items-center gap-3">
+          <button 
+            onClick={addHeader} 
+            class="flex-1 flex items-center justify-center gap-2 rounded-xl text-xs font-semibold border-2 border-dashed border-muted-foreground/20 text-muted-foreground hover:border-primary/50 hover:text-primary hover:bg-primary/5 h-10 transition-all active:scale-[0.98]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add Custom Header
+          </button>
+          <div class="w-8 shrink-0"></div>
+        </div>
       </main>
 
       {/* Footer Section */}
       <footer class="pt-2">
-        <button 
-          onClick={saveConfig} 
-          class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 h-11 w-full transition-all active:scale-[0.98]"
-        >
-          Save & Apply Changes
-        </button>
+        <div class="flex items-center gap-3">
+          <button 
+            onClick={saveConfig} 
+            class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 h-11 transition-all active:scale-[0.98]"
+          >
+            Save & Apply Changes
+          </button>
+          <div class="w-8 shrink-0"></div>
+        </div>
         
         <div class="h-8 mt-2 flex items-center justify-center overflow-hidden">
           <Show when={statusMsg()}>
