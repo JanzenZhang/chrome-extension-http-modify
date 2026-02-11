@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Header Modifier</title>
+  <style>
+    body {
+      width: 350px;
+      padding: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f8f9fa;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    .header-item {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      flex: 1;
+      min-width: 0; /* 防止 flex 子元素溢出 */
+      font-size: 13px;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #2196F3;
+      outline: none;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: opacity 0.2s, background-color 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0; /* 关键：防止按钮被挤压 */
+    }
+    .btn-add {
+      background-color: #f0f0f0;
+      color: #333;
+      border: 1px dashed #ccc;
+      width: 100%;
+      margin-top: 5px;
+    }
+    .btn-add:hover {
+      background-color: #e8e8e8;
+      border-color: #999;
+    }
+    .btn-save {
+      background-color: #2196F3;
+      color: white;
+      width: 100%;
+      margin-top: 15px;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+    }
+    .btn-save:hover {
+      background-color: #1e88e5;
+    }
+    .btn-remove {
+      background-color: #ffeded;
+      color: #f44336;
+      font-weight: bold;
+      padding: 8px 10px;
+    }
+    .btn-remove:hover {
+      background-color: #f44336;
+      color: white;
+    }
+    #headers-container {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h2>
+    Header Modifier
+    <label class="switch">
+      <input type="checkbox" id="enable-toggle">
+      <span class="slider"></span>
+    </label>
+  </h2>
+  
+  <div id="headers-container">
+    <!-- Header rows will be added here -->
+  </div>
+  
+  <button id="add-header" class="btn-add">+ Add Header</button>
+  <button id="save-config" class="btn-save">Save & Apply</button>
+  <div id="status-msg" class="status"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
