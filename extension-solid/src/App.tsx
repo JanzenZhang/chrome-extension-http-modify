@@ -111,25 +111,25 @@ function App() {
           </div>
         </div>
         
-        <div class="space-y-3 pr-2 -mr-2">
+        <div class="space-y-3">
           <For each={headers()}>
             {(header, i) => (
-              <div class="flex items-center gap-2 group animate-in fade-in slide-in-from-top-1 duration-200">
-                <div class="flex-1 flex gap-2 p-1.5 rounded-lg border border-border bg-muted/10 focus-within:bg-muted/30 focus-within:border-primary/30 transition-all">
+              <div class="flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div class="flex-1 flex gap-2 p-1.5 rounded-lg border border-border bg-muted/10 focus-within:bg-muted/30 focus-within:border-primary/30 transition-all min-w-0">
                   <input 
                     type="text" 
                     value={header.key}
                     onInput={(e) => updateHeader(i(), 'key', e.currentTarget.value)}
                     placeholder="e.g. Authorization" 
-                    class="flex-1 bg-transparent text-sm font-medium focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
+                    class="w-1/2 bg-transparent text-sm font-medium focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
                   />
-                  <div class="w-[1px] h-4 bg-border self-center"></div>
+                  <div class="w-[1px] h-4 bg-border self-center shrink-0"></div>
                   <input 
                     type="text" 
                     value={header.value}
                     onInput={(e) => updateHeader(i(), 'value', e.currentTarget.value)}
                     placeholder="Value..." 
-                    class="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
+                    class="w-1/2 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
                   />
                 </div>
                 
