@@ -41,14 +41,18 @@ function App() {
   const saveConfig = async () => {
     const currentHeaders = headers();
     
-    // Check if there are any empty fields in the current list
-    const hasEmptyFields = currentHeaders.some(h => h.key.trim() === '' || h.value.trim() === '');
-    
-    if (hasEmptyFields) {
-      setStatusMsg('Error: All keys and values must be filled');
-      // Briefly highlight the error then clear it
-      setTimeout(() => setStatusMsg(''), 3000);
-      return;
+    // Allow saving if it's a single, completely empty header (acts as "clear all")
+    const isSingleEmpty = currentHeaders.length === 1 && 
+                          currentHeaders[0].key.trim() === '' && 
+                          currentHeaders[0].value.trim() === '';
+
+    if (!isSingleEmpty) {
+      const hasEmptyFields = currentHeaders.some(h => h.key.trim() === '' || h.value.trim() === '');
+      if (hasEmptyFields) {
+        setStatusMsg('Error: All keys and values must be filled');
+        setTimeout(() => setStatusMsg(''), 3000);
+        return;
+      }
     }
 
     const validHeaders = currentHeaders.filter(h => h.key.trim() !== '');
