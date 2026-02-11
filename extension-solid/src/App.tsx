@@ -83,7 +83,7 @@ function App() {
   };
 
   return (
-    <div class="flex flex-col bg-background p-5 min-h-[420px]">
+    <div class="flex flex-col bg-background p-5 min-h-[100px]">
       {/* Header Section */}
       <header class="flex items-center justify-between mb-8">
         <div>
@@ -111,17 +111,17 @@ function App() {
           </div>
         </div>
         
-        <div class="max-h-[260px] overflow-y-auto space-y-3 pr-2 -mr-2">
+        <div class="space-y-3 pr-2 -mr-2">
           <For each={headers()}>
             {(header, i) => (
               <div class="flex items-center gap-2 group animate-in fade-in slide-in-from-top-1 duration-200">
-                <div class="flex-1 flex gap-2 p-1.5 rounded-lg border border-transparent group-hover:border-border group-hover:bg-muted/30 transition-all">
+                <div class="flex-1 flex gap-2 p-1.5 rounded-lg border border-border bg-muted/10 focus-within:bg-muted/30 focus-within:border-primary/30 transition-all">
                   <input 
                     type="text" 
                     value={header.key}
                     onInput={(e) => updateHeader(i(), 'key', e.currentTarget.value)}
                     placeholder="e.g. Authorization" 
-                    class="flex-1 bg-transparent text-sm font-medium focus:outline-none placeholder:text-muted-foreground/50"
+                    class="flex-1 bg-transparent text-sm font-medium focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
                   />
                   <div class="w-[1px] h-4 bg-border self-center"></div>
                   <input 
@@ -129,13 +129,14 @@ function App() {
                     value={header.value}
                     onInput={(e) => updateHeader(i(), 'value', e.currentTarget.value)}
                     placeholder="Value..." 
-                    class="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground/50"
+                    class="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
                   />
                 </div>
                 
                 <button 
                   onClick={() => removeHeader(i())} 
-                  class="opacity-0 group-hover:opacity-100 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 w-8 transition-all shrink-0"
+                  class="inline-flex items-center justify-center rounded-md text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 h-8 w-8 transition-all shrink-0"
+                  title="Remove"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
