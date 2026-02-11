@@ -183,8 +183,16 @@ function App() {
         
         <div class="h-8 mt-2 flex items-center justify-center overflow-hidden">
           <Show when={statusMsg()}>
-            <span class="text-[11px] text-primary font-bold flex items-center gap-1.5 animate-in slide-in-from-bottom-2 duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <span 
+              class="text-[11px] font-bold flex items-center gap-1.5 animate-in slide-in-from-bottom-2 duration-300"
+              classList={{
+                'text-destructive': statusMsg().includes('Error'),
+                'text-primary': !statusMsg().includes('Error')
+              }}
+            >
+              <Show when={!statusMsg().includes('Error')}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </Show>
               {statusMsg()}
             </span>
           </Show>
