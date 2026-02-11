@@ -39,7 +39,19 @@ function App() {
   };
 
   const saveConfig = async () => {
-    const validHeaders = headers().filter(h => h.key.trim() !== '');
+    const currentHeaders = headers();
+    
+    // Check if there are any empty fields in the current list
+    const hasEmptyFields = currentHeaders.some(h => h.key.trim() === '' || h.value.trim() === '');
+    
+    if (hasEmptyFields) {
+      setStatusMsg('Error: All keys and values must be filled');
+      // Briefly highlight the error then clear it
+      setTimeout(() => setStatusMsg(''), 3000);
+      return;
+    }
+
+    const validHeaders = currentHeaders.filter(h => h.key.trim() !== '');
     
     if (typeof chrome !== 'undefined' && chrome.storage) {
       await chrome.storage.local.set({ headers: validHeaders, enabled: enabled() });
