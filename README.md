@@ -1,42 +1,63 @@
-# HTTP Header Modifier (Chrome Extension)
+# HTTP Header Modifier (Angular 19 + Shadcn UI)
 
-A lightweight Chrome extension built with Manifest V3 that allows you to intercept and modify HTTP/HTTPS request headers globally.
+A modern, high-performance Chrome extension built with Angular 19 (Zoneless) and Tailwind CSS (Shadcn UI style). It allows you to intercept and modify HTTP/HTTPS request headers globally.
 
 ## Features
 
 - **Global Interception**: Intercepts all outgoing browser requests.
 - **Custom Headers**: Add multiple custom HTTP header key-value pairs.
-- **Toggle Switch**: Easily enable or disable header injection without uninstalling the extension.
-- **Persistent Storage**: Your configurations are saved locally in the browser using `chrome.storage`.
-- **Manifest V3**: Built using the latest Chrome extension standards for better performance and security (via `declarativeNetRequest` API).
-- **Clean UI**: User-friendly popup interface for managing headers.
+- **Modern UI**: Clean, responsive interface styled with Tailwind CSS, mimicking Shadcn UI.
+- **Zoneless Architecture**: Built with Angular 19's zoneless mode for smaller bundle size and better performance.
+- **Manifest V3 Compliant**: Fully adheres to the strict Content Security Policy (CSP) of MV3.
+- **Persistent Storage**: Configurations saved locally using `chrome.storage`.
 
-## Installation
+## Development Setup
 
-1.  **Download/Clone** this repository to your local machine.
-2.  Open Google Chrome and navigate to `chrome://extensions/`.
-3.  Turn on the **"Developer mode"** toggle in the top right corner.
-4.  Click the **"Load unpacked"** button in the top left.
-5.  Select the folder where you saved this project.
+### Prerequisites
 
-## How to Use
+- Node.js (v20+)
+- npm (v10+)
+- Angular CLI (v19+)
 
-1.  Click the **HTTP Header Modifier** icon in your browser's toolbar (you may need to pin it from the extensions puzzle icon).
-2.  Use the toggle switch at the top to enable the extension.
-3.  Add headers:
-    - Enter the **Header Name** (e.g., `X-Custom-Auth`).
-    - Enter the **Value** (e.g., `SecretToken123`).
-4.  Click **"+ Add Header"** to add more rows if needed.
-5.  Click **"Save & Apply"** to activate the configuration.
-6.  The specified headers will now be added to every request made by the browser.
+### Installation
 
-## Technical Details
+1.  Clone the repository.
+2.  Install dependencies:
+    ```bash
+    cd extension-ui
+    npm install
+    ```
 
-- **Manifest Version**: 3
-- **API Usage**: 
-  - `chrome.declarativeNetRequest`: For efficient and secure header modification.
-  - `chrome.storage.local`: For saving user configurations.
-- **Permissions**: `declarativeNetRequest`, `storage`, `<all_urls>`.
+### Building the Extension
+
+To build the project for production:
+
+```bash
+cd extension-ui
+ng build
+```
+
+> **Note**: Optimization is disabled in `angular.json` to prevent inline script/style injection, ensuring compliance with Chrome's Content Security Policy (CSP).
+
+The output files will be generated in `extension-ui/dist/extension-ui/browser`.
+
+## Loading into Chrome
+
+1.  Open Google Chrome and navigate to `chrome://extensions/`.
+2.  Turn on **"Developer mode"** (top right).
+3.  Click **"Load unpacked"**.
+4.  Select the **`extension-ui/dist/extension-ui/browser`** folder inside this project.
+5.  The extension is now installed!
+
+## Technical Implementation Details
+
+- **Framework**: Angular 19 (Zoneless mode)
+- **Styling**: Tailwind CSS v3 (Custom Shadcn UI implementation)
+- **CSP Fixes**: 
+    - Disabled CSS/JS inlining in `angular.json`.
+    - Explicitly defined `extension_pages` CSP in `manifest.json`.
+    - Set `baseHref` to `./` for correct asset loading within the extension context.
+- **Chrome APIs**: `declarativeNetRequest` for rule-based header modification, `storage.local` for settings.
 
 ## License
 

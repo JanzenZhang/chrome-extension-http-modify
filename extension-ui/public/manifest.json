@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "HTTP Header Modifier",
+  "version": "1.0",
+  "description": "Intercept and add custom HTTP headers to all requests.",
+  "permissions": [
+    "declarativeNetRequest",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
