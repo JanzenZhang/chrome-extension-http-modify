@@ -1,0 +1,12 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with Shadcn Primary Color -->
+  <rect width="128" height="128" rx="30" fill="#0F172A"/>
+  
+  <!-- Stylized 'H' for Headers -->
+  <path d="M45 35V93" stroke="white" stroke-width="12" stroke-linecap="round"/>
+  <path d="M83 35V93" stroke="white" stroke-width="12" stroke-linecap="round"/>
+  <path d="M45 64H83" stroke="white" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Accent Blue Bar representing 'Injection' or 'Modification' -->
+  <rect x="30" y="105" width="68" height="10" rx="5" fill="#3B82F6"/>
+</svg>
