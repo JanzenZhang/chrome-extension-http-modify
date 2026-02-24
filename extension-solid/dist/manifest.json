@@ -5,7 +5,8 @@
   "description": "Intercept and add custom HTTP headers to all requests.",
   "permissions": [
     "declarativeNetRequest",
-    "storage"
+    "storage",
+    "alarms"
   ],
   "host_permissions": [
     "<all_urls>"
