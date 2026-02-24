@@ -1,10 +1,13 @@
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed');
-  // Initialize storage if empty
-  chrome.storage.local.get(['headers', 'enabled'], (result) => {
-    if (result.enabled === undefined) {
-      chrome.storage.local.set({ enabled: true, headers: [] });
-    }
+  chrome.storage.local.get(['headers', 'enabled', 'domains'], (result) => {
+    const initialState = {
+      enabled: result.enabled ?? true,
+      headers: Array.isArray(result.headers) ? result.headers : [],
+      domains: Array.isArray(result.domains) ? result.domains : []
+    };
+
+    chrome.storage.local.set(initialState);
   });
 });
 
