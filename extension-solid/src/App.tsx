@@ -713,7 +713,7 @@ function App() {
                 </p>
               </div>
             </div>
-            <span class="text-[9px] rounded-md px-1.5 py-0.5 bg-primary/[0.08] text-primary font-extrabold tracking-wider border border-primary/20">
+            <span class="text-[9px] rounded-md px-1.5 py-0.5 bg-primary/8 text-primary font-extrabold tracking-wider border border-primary/20">
               MV3
             </span>
           </div>
@@ -748,7 +748,7 @@ function App() {
                 onChange={(event) => setEnabled(event.currentTarget.checked)}
                 class="sr-only peer"
               />
-              <div class="w-10 h-5.5 bg-muted-foreground/25 rounded-full peer peer-focus-visible:ring-2 peer-focus-visible:ring-ring/30 transition-all peer-checked:bg-primary after:content-[''] after:absolute after:top-[1.5px] after:left-[1.5px] after:bg-white after:rounded-full after:h-[18px] after:w-[18px] after:transition-all after:shadow-sm peer-checked:after:translate-x-[18px]"></div>
+              <div class="w-10 h-5.5 bg-muted-foreground/25 rounded-full peer peer-focus-visible:ring-2 peer-focus-visible:ring-ring/30 transition-all peer-checked:bg-primary after:content-[''] after:absolute after:top-[1.5px] after:left-[1.5px] after:bg-white after:rounded-full after:h-4.5 after:w-4.5 after:transition-all after:shadow-sm peer-checked:after:translate-x-4.5"></div>
             </label>
           </div>
         </header>
@@ -782,7 +782,7 @@ function App() {
               </div>
               <button
                 onClick={addHeader}
-                class="inline-flex items-center justify-center gap-1 rounded-lg border border-dashed border-muted-foreground/25 px-2 py-1 text-[10px] font-bold text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/[0.04] transition-all"
+                class="inline-flex items-center justify-center gap-1 rounded-lg border border-dashed border-muted-foreground/25 px-2 py-1 text-[10px] font-bold text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/4 transition-all"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -807,7 +807,7 @@ function App() {
                   <span class="text-[9px] font-bold text-muted-foreground/50 text-center select-none">
                     {String(index() + 1).padStart(2, "0")}
                   </span>
-                  <div class="flex gap-1.5 p-1.5 rounded-xl border border-border/70 bg-muted/[0.04] input-glow transition-all min-w-0">
+                  <div class="flex gap-1.5 p-1.5 rounded-xl border border-border/70 bg-muted/4 input-glow transition-all min-w-0">
                     <div class="flex items-center gap-1.5 min-w-0 flex-1">
                       <input
                         type="text"
@@ -891,10 +891,10 @@ function App() {
               onInput={(event) => setDomainInput(event.currentTarget.value)}
               placeholder="example.com&#10;api.example.com&#10;localhost"
               rows={3}
-              class="w-full rounded-xl border border-border/70 bg-muted/[0.04] focus:bg-muted/[0.06] transition-all px-3 py-2 text-[12px] focus:outline-none placeholder:text-muted-foreground/40 resize-none custom-focus"
+              class="w-full rounded-xl border border-border/70 bg-muted/4 focus:bg-muted/6 transition-all px-3 py-2 text-[12px] focus:outline-none placeholder:text-muted-foreground/40 resize-none custom-focus"
             />
             {/* 域名标签 */}
-            <div class="flex flex-wrap gap-1.5 min-h-[22px]">
+            <div class="flex flex-wrap gap-1.5 min-h-5.5">
               <Show
                 when={parsedDomains().length > 0}
                 fallback={
@@ -1057,10 +1057,10 @@ function App() {
                   onInput={(event) =>
                     setTemporaryMinutesInput(event.currentTarget.value)
                   }
-                  class="w-full rounded-xl border border-border/70 bg-muted/[0.04] transition-all px-3 py-2 text-[12px] font-semibold focus:outline-none custom-focus [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  class="w-full rounded-xl border border-border/70 bg-muted/4 transition-all px-3 py-2 text-[12px] font-semibold focus:outline-none custom-focus [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
-              <span class="text-[11px] font-bold text-muted-foreground/60 min-w-[28px]">
+              <span class="text-[11px] font-bold text-muted-foreground/60 min-w-7">
                 min
               </span>
             </div>
@@ -1095,7 +1095,7 @@ function App() {
             <div class="grid grid-cols-2 gap-2">
               <button
                 onClick={exportConfig}
-                class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/60 h-[32px] text-[10px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 hover:border-border transition-all custom-focus"
+                class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/60 h-8 text-[10px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 hover:border-border transition-all custom-focus"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1116,7 +1116,7 @@ function App() {
               </button>
               <button
                 onClick={() => importFileInput?.click()}
-                class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/60 h-[32px] text-[10px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 hover:border-border transition-all custom-focus"
+                class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/60 h-8 text-[10px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 hover:border-border transition-all custom-focus"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1138,7 +1138,7 @@ function App() {
             </div>
             <button
               onClick={saveConfig}
-              class="btn-primary-gradient w-full inline-flex items-center justify-center gap-2 rounded-xl text-primary-foreground text-[12px] font-extrabold shadow-button-primary h-[38px] active:scale-[0.98] custom-focus"
+              class="btn-primary-gradient w-full inline-flex items-center justify-center gap-2 rounded-xl text-primary-foreground text-[12px] font-extrabold shadow-button-primary h-9.5 active:scale-[0.98] custom-focus"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
