@@ -615,57 +615,257 @@ function App() {
     setTemporaryMinutesInput(String(minutes));
   };
 
+  const modeIndexMap: Record<DomainMatchMode, number> = {
+    exact: 0,
+    include_subdomains: 1,
+    subdomains_only: 2,
+  };
+
+  const sliderStyle = createMemo(() => {
+    const index = modeIndexMap[domainMatchMode()];
+    return {
+      left: `calc(4px + ${index} * ((100% - 8px) / 3))`,
+      width: "calc((100% - 8px) / 3)",
+    };
+  });
+
   return (
-    <div class="h-[520px] w-full bg-gradient-to-b from-background to-slate-50/60 px-3 pt-3 pb-1.5 flex flex-col gap-1.5">
-      <header class="rounded-2xl border border-border bg-card/80 backdrop-blur px-4 py-3">
-        <div class="flex items-start justify-between">
-          <div>
-            <h1 class="text-lg font-black tracking-tight text-foreground leading-tight">
-              HTTP Header Modifier
-            </h1>
-            <p class="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mt-1">
-              Request Header Rules
-            </p>
+    <div class="relative h-130 w-full bg-linear-to-b from-background via-background to-muted/20 flex flex-col select-none">
+      {/* Toast 通知横幅 */}
+      <Show when={statusMsg()}>
+        <div class="absolute top-3 left-3 right-3 z-50 animate-toast-in">
+          <div
+            class="flex items-center gap-2.5 rounded-xl px-4 py-2.5 shadow-toast"
+            classList={{
+              "toast-success": statusType() === "success",
+              "toast-error": statusType() === "error",
+            }}
+          >
+            <Show when={statusType() === "success"}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="shrink-0"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </Show>
+            <Show when={statusType() === "error"}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="shrink-0"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" x2="9" y1="9" y2="15" />
+                <line x1="9" x2="15" y1="9" y2="15" />
+              </svg>
+            </Show>
+            <span class="text-xs font-bold leading-tight">{statusMsg()}</span>
           </div>
-          <span class="text-[10px] rounded-full px-2 py-1 bg-muted text-muted-foreground font-semibold">
-            MV3
-          </span>
         </div>
-        <div class="mt-3 flex items-center justify-between rounded-xl bg-muted/40 px-3 py-2">
-          <div class="flex items-center gap-2">
-            <span
-              class="h-2 w-2 rounded-full"
-              classList={{
-                "bg-emerald-500": enabled(),
-                "bg-slate-400": !enabled(),
-              }}
-            />
-            <span class="text-xs font-semibold text-foreground">
-              {enabled() ? "Modifier enabled" : "Modifier disabled"}
+      </Show>
+
+      <div class="flex flex-col gap-2 h-full px-3 pt-3 pb-2">
+        {/* Header */}
+        <header class="rounded-2xl border border-border/80 bg-linear-to-b from-card to-card/95 shadow-card px-4 py-3 shrink-0">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="h-7 w-7 rounded-xl bg-primary flex items-center justify-center shadow-sm shadow-primary/20">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-primary-foreground"
+                >
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <polyline points="3.29 7 12 12 20.71 7" />
+                  <line x1="12" x2="12" y1="22" y2="12" />
+                </svg>
+              </div>
+              <div>
+                <h1 class="text-base font-extrabold tracking-tight text-foreground leading-tight">
+                  Header Modifier
+                </h1>
+                <p class="text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.15em] mt-0.5">
+                  Request Rules
+                </p>
+              </div>
+            </div>
+            <span class="text-[9px] rounded-md px-1.5 py-0.5 bg-primary/[0.08] text-primary font-extrabold tracking-wider border border-primary/20">
+              MV3
             </span>
           </div>
-          <label class="group relative inline-flex items-center cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={enabled()}
-              onChange={(event) => setEnabled(event.currentTarget.checked)}
-              class="sr-only peer"
-            />
-            <div class="w-11 h-6 bg-muted rounded-full peer peer-focus:ring-2 peer-focus:ring-ring transition-all peer-checked:bg-primary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5 shadow-sm"></div>
-          </label>
-        </div>
-      </header>
 
-      <main class="flex-1 min-h-0 space-y-2.5 pr-1 overflow-y-auto overscroll-y-contain">
-        <section class="rounded-2xl border border-border bg-card p-3 space-y-3">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Headers
-            </h2>
-            <button
-              onClick={addHeader}
-              class="inline-flex items-center justify-center gap-1 rounded-lg border border-dashed border-muted-foreground/30 px-2 py-1 text-[11px] font-semibold text-muted-foreground hover:text-primary hover:border-primary/60 hover:bg-primary/5 transition-all"
-            >
+          {/* 状态开关 */}
+          <div class="mt-2.5 flex items-center justify-between rounded-xl bg-muted/25 px-3 py-2 border border-border/50">
+            <div class="flex items-center gap-2.5">
+              <span class="relative flex h-2 w-2">
+                <span
+                  class="absolute inline-flex h-full w-full rounded-full opacity-75"
+                  classList={{
+                    "animate-ping bg-emerald-400": enabled(),
+                    "bg-slate-400": !enabled(),
+                  }}
+                />
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2"
+                  classList={{
+                    "bg-emerald-500": enabled(),
+                    "bg-slate-400": !enabled(),
+                  }}
+                />
+              </span>
+              <span class="text-xs font-semibold text-foreground/80">
+                {enabled() ? "Active" : "Disabled"}
+              </span>
+            </div>
+            <label class="group relative inline-flex items-center cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={enabled()}
+                onChange={(event) => setEnabled(event.currentTarget.checked)}
+                class="sr-only peer"
+              />
+              <div class="w-10 h-5.5 bg-muted-foreground/25 rounded-full peer peer-focus-visible:ring-2 peer-focus-visible:ring-ring/30 transition-all peer-checked:bg-primary after:content-[''] after:absolute after:top-[1.5px] after:left-[1.5px] after:bg-white after:rounded-full after:h-[18px] after:w-[18px] after:transition-all after:shadow-sm peer-checked:after:translate-x-[18px]"></div>
+            </label>
+          </div>
+        </header>
+
+        {/* 可滚动主内容区 */}
+        <main class="flex-1 min-h-0 space-y-2 pr-0.5 overflow-y-auto overscroll-y-contain">
+          {/* Headers 区域 */}
+          <section class="rounded-2xl border border-border/80 bg-card shadow-card p-3 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-muted-foreground"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" x2="8" y1="13" y2="13" />
+                  <line x1="16" x2="8" y1="17" y2="17" />
+                </svg>
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Headers
+                </h2>
+              </div>
+              <button
+                onClick={addHeader}
+                class="inline-flex items-center justify-center gap-1 rounded-lg border border-dashed border-muted-foreground/25 px-2 py-1 text-[10px] font-bold text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/[0.04] transition-all"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+                Add
+              </button>
+            </div>
+            <For each={headers()}>
+              {(header, index) => (
+                <div class="grid grid-cols-[20px_1fr_28px] gap-1.5 items-center animate-slide-up">
+                  <span class="text-[9px] font-bold text-muted-foreground/50 text-center select-none">
+                    {String(index() + 1).padStart(2, "0")}
+                  </span>
+                  <div class="flex gap-1.5 p-1.5 rounded-xl border border-border/70 bg-muted/[0.04] input-glow transition-all min-w-0">
+                    <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                      <input
+                        type="text"
+                        value={header.key}
+                        onInput={(event) =>
+                          updateHeader(
+                            index(),
+                            "key",
+                            event.currentTarget.value,
+                          )
+                        }
+                        placeholder="Key"
+                        class="w-1/2 bg-transparent text-[12px] font-semibold focus:outline-none placeholder:text-muted-foreground/40 min-w-0 px-1"
+                      />
+                      <div class="w-px h-4 bg-border/60 shrink-0"></div>
+                      <input
+                        type="text"
+                        value={header.value}
+                        onInput={(event) =>
+                          updateHeader(
+                            index(),
+                            "value",
+                            event.currentTarget.value,
+                          )
+                        }
+                        placeholder="Value"
+                        class="w-1/2 bg-transparent text-[12px] focus:outline-none placeholder:text-muted-foreground/40 min-w-0 px-1"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeHeader(index())}
+                    class="inline-flex items-center justify-center rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 h-7 w-7 transition-all shrink-0 custom-focus"
+                    title="Remove"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </For>
+          </section>
+
+          {/* Scope 区域 */}
+          <section class="rounded-2xl border border-border/80 bg-card shadow-card p-3 space-y-2.5">
+            <div class="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="12"
@@ -676,253 +876,297 @@ function App() {
                 stroke-width="2.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+                class="text-muted-foreground"
               >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" x2="22" y1="12" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
               </svg>
-              Add
-            </button>
-          </div>
-          <For each={headers()}>
-            {(header, index) => (
-              <div class="grid grid-cols-[24px_1fr_34px] gap-2 items-center animate-in fade-in slide-in-from-top-1 duration-200">
-                <span class="text-[10px] font-bold text-muted-foreground text-center">
-                  {index() + 1}
-                </span>
-                <div class="flex gap-2 p-2 rounded-xl border border-border bg-muted/10 focus-within:bg-muted/25 focus-within:border-primary/30 transition-all min-w-0">
-                  <input
-                    type="text"
-                    value={header.key}
-                    onInput={(event) =>
-                      updateHeader(index(), "key", event.currentTarget.value)
-                    }
-                    placeholder="e.g. Authorization"
-                    class="w-1/2 bg-transparent text-sm font-medium focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
-                  />
-                  <div class="w-[1px] h-4 bg-border self-center shrink-0"></div>
-                  <input
-                    type="text"
-                    value={header.value}
-                    onInput={(event) =>
-                      updateHeader(index(), "value", event.currentTarget.value)
-                    }
-                    placeholder="Value..."
-                    class="w-1/2 bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
-                  />
-                </div>
+              <h2 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                Scope
+              </h2>
+            </div>
+            <textarea
+              value={domainInput()}
+              onInput={(event) => setDomainInput(event.currentTarget.value)}
+              placeholder="example.com&#10;api.example.com&#10;localhost"
+              rows={3}
+              class="w-full rounded-xl border border-border/70 bg-muted/[0.04] focus:bg-muted/[0.06] transition-all px-3 py-2 text-[12px] focus:outline-none placeholder:text-muted-foreground/40 resize-none custom-focus"
+            />
+            {/* 域名标签 */}
+            <div class="flex flex-wrap gap-1.5 min-h-[22px]">
+              <Show
+                when={parsedDomains().length > 0}
+                fallback={
+                  <div class="flex items-center gap-1.5 text-muted-foreground/50">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10"
+                      height="10"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M8 12h8" />
+                    </svg>
+                    <span class="text-[10px]">Empty = global matching</span>
+                  </div>
+                }
+              >
+                <For each={parsedDomains().slice(0, 8)}>
+                  {(domain) => (
+                    <span class="inline-flex items-center gap-1 rounded-full bg-muted/60 px-2 py-0.5 text-[10px] font-semibold text-foreground/80 animate-chip-in">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="8"
+                        height="8"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="text-primary/60"
+                      >
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                      </svg>
+                      {domain}
+                    </span>
+                  )}
+                </For>
+                <Show when={parsedDomains().length > 8}>
+                  <span class="inline-flex items-center rounded-full bg-muted/40 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground animate-chip-in">
+                    +{parsedDomains().length - 8}
+                  </span>
+                </Show>
+              </Show>
+            </div>
+            {/* 匹配模式 - 滑动分段控件 */}
+            <div class="segmented-control rounded-xl bg-muted/30 p-1">
+              <div
+                class="slider"
+                style={{
+                  left: sliderStyle().left,
+                  width: sliderStyle().width,
+                }}
+              />
+              <div class="flex relative">
                 <button
-                  onClick={() => removeHeader(index())}
-                  class="inline-flex items-center justify-center rounded-lg text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 h-8 w-8 transition-all shrink-0"
-                  title="Remove"
+                  onClick={() => setDomainMatchMode("exact")}
+                  class="flex-1 h-7 rounded-lg text-[10px] font-bold transition-colors"
+                  classList={{
+                    "text-foreground": domainMatchMode() === "exact",
+                    "text-muted-foreground hover:text-foreground/70":
+                      domainMatchMode() !== "exact",
+                  }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
+                  Exact
+                </button>
+                <button
+                  onClick={() => setDomainMatchMode("include_subdomains")}
+                  class="flex-1 h-7 rounded-lg text-[10px] font-bold transition-colors"
+                  classList={{
+                    "text-foreground":
+                      domainMatchMode() === "include_subdomains",
+                    "text-muted-foreground hover:text-foreground/70":
+                      domainMatchMode() !== "include_subdomains",
+                  }}
+                >
+                  Host+Sub
+                </button>
+                <button
+                  onClick={() => setDomainMatchMode("subdomains_only")}
+                  class="flex-1 h-7 rounded-lg text-[10px] font-bold transition-colors"
+                  classList={{
+                    "text-foreground": domainMatchMode() === "subdomains_only",
+                    "text-muted-foreground hover:text-foreground/70":
+                      domainMatchMode() !== "subdomains_only",
+                  }}
+                >
+                  Sub Only
                 </button>
               </div>
-            )}
-          </For>
-        </section>
+            </div>
+            <p class="text-[10px] text-muted-foreground/60 leading-relaxed">
+              One per line or comma. &quot;Sub Only&quot; excludes root host.
+            </p>
+          </section>
 
-        <section class="rounded-2xl border border-border bg-card p-3 space-y-2">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Scope
-          </h2>
-          <textarea
-            value={domainInput()}
-            onInput={(event) => setDomainInput(event.currentTarget.value)}
-            placeholder="example.com\napi.example.com\nlocalhost"
-            rows={4}
-            class="w-full rounded-lg border border-border bg-muted/10 focus:bg-muted/20 focus:border-primary/30 transition-all px-3 py-2 text-sm focus:outline-none placeholder:text-muted-foreground/50 resize-none"
-          />
-          <div class="flex flex-wrap gap-1.5">
-            <Show
-              when={parsedDomains().length > 0}
-              fallback={
-                <span class="text-[11px] text-muted-foreground">
-                  Empty means global matching.
-                </span>
-              }
-            >
-              <For each={parsedDomains().slice(0, 8)}>
-                {(domain) => (
-                  <span class="inline-flex items-center rounded-full bg-muted px-2 py-1 text-[10px] font-semibold text-foreground">
-                    {domain}
-                  </span>
-                )}
-              </For>
-              <Show when={parsedDomains().length > 8}>
-                <span class="inline-flex items-center rounded-full bg-muted px-2 py-1 text-[10px] font-semibold text-muted-foreground">
-                  +{parsedDomains().length - 8}
-                </span>
-              </Show>
-            </Show>
-          </div>
-          <div class="grid grid-cols-3 gap-1 rounded-xl bg-muted/40 p-1">
-            <button
-              onClick={() => setDomainMatchMode("exact")}
-              class="h-8 rounded-lg text-[11px] font-semibold transition-all"
-              classList={{
-                "bg-background shadow-sm text-foreground":
-                  domainMatchMode() === "exact",
-                "text-muted-foreground hover:text-foreground":
-                  domainMatchMode() !== "exact",
-              }}
-            >
-              Exact
-            </button>
-            <button
-              onClick={() => setDomainMatchMode("include_subdomains")}
-              class="h-8 rounded-lg text-[11px] font-semibold transition-all"
-              classList={{
-                "bg-background shadow-sm text-foreground":
-                  domainMatchMode() === "include_subdomains",
-                "text-muted-foreground hover:text-foreground":
-                  domainMatchMode() !== "include_subdomains",
-              }}
-            >
-              Host + Sub
-            </button>
-            <button
-              onClick={() => setDomainMatchMode("subdomains_only")}
-              class="h-8 rounded-lg text-[11px] font-semibold transition-all"
-              classList={{
-                "bg-background shadow-sm text-foreground":
-                  domainMatchMode() === "subdomains_only",
-                "text-muted-foreground hover:text-foreground":
-                  domainMatchMode() !== "subdomains_only",
-              }}
-            >
-              Sub Only
-            </button>
-          </div>
-          <p class="text-[11px] text-muted-foreground">
-            One per line or comma. `Sub Only` excludes root host.
-          </p>
-        </section>
-
-        <section class="rounded-2xl border border-border bg-card p-3 space-y-2">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Duration
-          </h2>
-          <div class="grid grid-cols-4 gap-1">
-            <button
-              onClick={() => applyTemporaryPreset(0)}
-              class="h-8 rounded-lg border border-border text-[11px] font-semibold hover:bg-muted/40 transition-all"
-            >
-              Off
-            </button>
-            <button
-              onClick={() => applyTemporaryPreset(15)}
-              class="h-8 rounded-lg border border-border text-[11px] font-semibold hover:bg-muted/40 transition-all"
-            >
-              15m
-            </button>
-            <button
-              onClick={() => applyTemporaryPreset(60)}
-              class="h-8 rounded-lg border border-border text-[11px] font-semibold hover:bg-muted/40 transition-all"
-            >
-              1h
-            </button>
-            <button
-              onClick={() => applyTemporaryPreset(480)}
-              class="h-8 rounded-lg border border-border text-[11px] font-semibold hover:bg-muted/40 transition-all"
-            >
-              8h
-            </button>
-          </div>
-          <div class="flex items-center gap-2">
-            <input
-              type="number"
-              min="0"
-              max="1440"
-              value={temporaryMinutesInput()}
-              onInput={(event) =>
-                setTemporaryMinutesInput(event.currentTarget.value)
-              }
-              class="w-full rounded-lg border border-border bg-muted/10 focus:bg-muted/20 focus:border-primary/30 transition-all px-3 py-2 text-sm focus:outline-none"
-            />
-            <span class="text-xs font-semibold text-muted-foreground">min</span>
-          </div>
-          <p class="text-[11px] text-muted-foreground">
-            0 means always on. Max 1440 minutes.
-          </p>
-        </section>
-      </main>
-
-      <footer class="space-y-0 shrink-0">
-        <section class="rounded-xl border border-border bg-card px-2.5 py-2 space-y-2">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Actions
-          </h2>
-          <div class="grid grid-cols-2 gap-2">
-            <button
-              onClick={exportConfig}
-              class="inline-flex items-center justify-center rounded-lg border border-border h-[32px] text-[11px] font-semibold hover:bg-muted/30 transition-all"
-            >
-              Export JSON
-            </button>
-            <button
-              onClick={() => importFileInput?.click()}
-              class="inline-flex items-center justify-center rounded-lg border border-border h-[32px] text-[11px] font-semibold hover:bg-muted/30 transition-all"
-            >
-              Import JSON
-            </button>
-          </div>
-          <button
-            onClick={saveConfig}
-            class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 h-[40px] transition-all active:scale-[0.98]"
-          >
-            Save & Apply Changes
-          </button>
-          <Show when={statusMsg()}>
-            <div class="pt-0.5 flex items-center justify-center overflow-hidden">
-              <span
-                class="text-[11px] font-bold flex items-center gap-1.5 animate-in slide-in-from-bottom-2 duration-300"
-                classList={{
-                  "text-destructive": statusType() === "error",
-                  "text-primary": statusType() === "success",
-                }}
+          {/* Duration 区域 */}
+          <section class="rounded-2xl border border-border/80 bg-card shadow-card p-3 space-y-2.5">
+            <div class="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-muted-foreground"
               >
-                <Show when={statusType() === "success"}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                </Show>
-                {statusMsg()}
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <h2 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                Duration
+              </h2>
+            </div>
+            <div class="flex gap-1.5">
+              <For
+                each={[
+                  { label: "Off", value: 0 },
+                  { label: "15m", value: 15 },
+                  { label: "1h", value: 60 },
+                  { label: "8h", value: 480 },
+                ]}
+              >
+                {(preset) => {
+                  const isActive = () =>
+                    String(preset.value) === temporaryMinutesInput();
+                  return (
+                    <button
+                      onClick={() => applyTemporaryPreset(preset.value)}
+                      class="flex-1 h-7 rounded-lg text-[11px] font-bold transition-all"
+                      classList={{
+                        "bg-primary text-primary-foreground shadow-sm shadow-primary/20":
+                          isActive(),
+                        "bg-muted/40 text-muted-foreground hover:bg-muted/60 hover:text-foreground/80 border border-border/50":
+                          !isActive(),
+                      }}
+                    >
+                      {preset.label}
+                    </button>
+                  );
+                }}
+              </For>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 relative">
+                <input
+                  type="number"
+                  min="0"
+                  max="1440"
+                  value={temporaryMinutesInput()}
+                  onInput={(event) =>
+                    setTemporaryMinutesInput(event.currentTarget.value)
+                  }
+                  class="w-full rounded-xl border border-border/70 bg-muted/[0.04] transition-all px-3 py-2 text-[12px] font-semibold focus:outline-none custom-focus [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
+              <span class="text-[11px] font-bold text-muted-foreground/60 min-w-[28px]">
+                min
               </span>
             </div>
-          </Show>
-          <input
-            ref={importFileInput}
-            type="file"
-            accept="application/json"
-            class="hidden"
-            onChange={importConfig}
-          />
-        </section>
-      </footer>
+            <p class="text-[10px] text-muted-foreground/60 leading-relaxed">
+              0 = always on &middot; Max 1440 min (24h)
+            </p>
+          </section>
+        </main>
+
+        {/* Footer 操作区 */}
+        <footer class="shrink-0">
+          <div class="rounded-2xl border border-border/80 bg-card shadow-card px-3 py-2.5 space-y-2.5">
+            <div class="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-muted-foreground"
+              >
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              <h2 class="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                Actions
+              </h2>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                onClick={exportConfig}
+                class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/60 h-[32px] text-[10px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 hover:border-border transition-all custom-focus"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+                Export
+              </button>
+              <button
+                onClick={() => importFileInput?.click()}
+                class="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/60 h-[32px] text-[10px] font-bold text-muted-foreground hover:text-foreground hover:bg-muted/30 hover:border-border transition-all custom-focus"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" x2="12" y1="3" y2="15" />
+                </svg>
+                Import
+              </button>
+            </div>
+            <button
+              onClick={saveConfig}
+              class="btn-primary-gradient w-full inline-flex items-center justify-center gap-2 rounded-xl text-primary-foreground text-[12px] font-extrabold shadow-button-primary h-[38px] active:scale-[0.98] custom-focus"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Save &amp; Apply
+            </button>
+            <input
+              ref={importFileInput}
+              type="file"
+              accept="application/json"
+              class="hidden"
+              onChange={importConfig}
+            />
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }
